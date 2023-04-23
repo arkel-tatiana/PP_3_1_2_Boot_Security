@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+    <meta charset="UTF-8">
+    <title>Spring Security for User</title>
+</head>
+<body>
+<h1>Данные пользователя </h1>
+<br><br>
+<div th:object="${userList}" style="width: 1000px;">
+    <div style="display:flex; background-color:lightgreen; font-size: 20px;">
+        <p style="background-color:lightgray; margin: 0px; width: 300px; padding-top: 20px">Имя пользователя:</p>
+        <p th:text="*{username}" ></p>
+    </div>
+    <div style="display:flex; background-color:lightgreen; font-size: 20px;">
+        <p style="background-color:lightgray; margin: 0px; width: 300px; padding-top: 20px">Пароль:</p>
+        <p th:text="*{password}" ></p>
+    </div>
+    <div style="display:flex; background-color:lightgreen; font-size: 20px;">
+        <p style="background-color:lightgray; margin: 0px; width: 300px; padding-top: 20px">Возраст:</p>
+        <p th:text="*{age}"></p>
+    </div>
+    <div style="display:flex; background-color:lightgreen; font-size: 20px;">
+        <p style="background-color:lightgray; margin: 0px; width: 300px; padding-top: 20px">Емаил пользователя:</p>
+        <p th:text="*{email}" ></p>
+    </div>
+    <div style="display:flex; background-color:lightgreen; font-size: 20px;">
+        <p style="background-color:lightgray; margin: 0px; width: 300px; padding-top: 20px">Роль пользователя:</p>
+        <p th:text="*{roliToString()}" ></p>
+    </div>
+</div>
+<br><br>
+<form th:method="POST" th:action="@{/logout}">
+    <button type="submit" style="width:200px; height: 30px; background-color: yellow; font-size: 20px;
+                     border: red solid 3px; color:red; text-align: center;">Выйти из профиля</button>
+</form>
+</body>
+</html>

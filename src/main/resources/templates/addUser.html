@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>ADD USER</title>
+</head>
+<body>
+<h1>Данные пользователя</h1>
+<br><br>
+
+<form th:method="POST" th:action="@{/admin/saveUser}" th:object="${userList}">
+        <label style="background-color:lightgreen; font-size: 15px; margin-right: 20px;"
+               for="userName">Имя</label>
+        <input type="text" th:field="*{username}" id="userName"
+               style="background-color:lightblue; font-size: 15px"
+               />
+        <div style="color:red" th:if="${#fields.hasErrors('username')}" th:errors="*{username}">Username Error</div>
+        <br><br>
+
+        <label style="background-color:lightgreen; font-size: 15px; margin-right: 20px;"
+               for="password" >Пароль</label>
+        <input type="text" th:field="*{password}" id="password"
+               style="background-color:lightblue; font-size: 15px"/>
+        <br><br>
+
+        <label style="background-color:lightgreen; font-size: 15px; margin-right: 20px;"
+               for="age">Возраст </label>
+        <input type="text" th:field="*{age}" id="age"
+               style="background-color:lightblue; font-size: 15px"/>
+        <div style="color:red" th:if="${#fields.hasErrors('age')}" th:errors="*{age}">Age Error</div>
+        <br><br>
+
+        <label style="background-color:lightgreen; font-size: 15px; margin-right: 20px;"
+               for="email">Эл почта</label>
+        <input type="text" th:field="*{email}" id="email"
+               style="background-color:lightblue; font-size: 15px"/>
+        <div style="color:red" th:if="${#fields.hasErrors('email')}" th:errors="*{email}">Email Error</div>
+        <br><br>
+        <label style="background-color:lightgreen; font-size: 15px;">Роль пользователя
+        <input style="background-color:lightgreen; font-size: 15px; margin-left: 30px; margin-right: 5px;"
+               type="checkbox" name="roles"
+               th:each="role : ${roleList}"
+               th:text="${role.name}"
+               th:value="${role.id}"
+               th:field="*{roles}"
+        />
+        </label>
+        <div style="color:red" th:if="${#fields.hasErrors('roles')}" th:errors="*{roles}">Roles Error</div>
+        <br><br><br>
+    <input type="submit" value="Добавить пользователя"
+           style="background-color: mediumpurple; font-size: 15px; border: black solid 3px; text-align: center;"/>
+</form>
+<br><br><br>
+<form th:method="POST" th:action="@{/logout}">
+        <button type="submit" style="width:200px; height: 30px; background-color: yellow; font-size: 20px;
+                     border: red solid 3px; color:red; text-align: center;">Выйти из профиля</button>
+</form>
+
+
+</body>
+</html>
