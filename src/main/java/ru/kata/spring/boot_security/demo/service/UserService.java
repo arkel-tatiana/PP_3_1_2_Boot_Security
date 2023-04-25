@@ -11,7 +11,7 @@ import java.util.List;
 public interface UserService {
     List<User> getUsers();
 
-    void saveUser(User userSave, PasswordEncoder passwordEncoder);
+    void saveUser(User userSave);
 
     void deleteUser(Long id);
 
@@ -20,5 +20,5 @@ public interface UserService {
     @Transactional(readOnly = true)
     User findUserByName(String nameUser);
 
-    void updateUser(User userUpdate, PasswordEncoder passwordEncoder);
+    void updateUser(User userUpdate);
 }

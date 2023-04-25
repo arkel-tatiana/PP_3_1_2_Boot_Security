@@ -1,5 +1,7 @@
 package ru.kata.spring.boot_security.demo.service;
 
+import org.hibernate.Hibernate;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -21,9 +23,11 @@ import java.util.stream.Collectors;
 public class UserServiceImpl implements UserService, UserDetailsService {
 
     private final UserRepository userRepository;
-
-    public UserServiceImpl(UserRepository userRepository) {
+    private final PasswordEncoder passwordEncoder;
+@Autowired
+    public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
@@ -34,7 +38,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Override
     @Transactional()
-    public void saveUser(User userSave, PasswordEncoder passwordEncoder) {
+    public void saveUser(User userSave) {
         userSave.setPassword(passwordEncoder.encode(userSave.getPassword()));
         userRepository.save(userSave);
     }
@@ -65,7 +69,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
     @Override
     @Transactional()
-    public void updateUser(User userUpdate, PasswordEncoder passwordEncoder) {
+    public void updateUser(User userUpdate) {
         User userNotUpdate = findUserByName(userUpdate.getUsername());
         if (userUpdate.getPassword().isEmpty()) {
            userUpdate.setPassword(userNotUpdate.getPassword());
@@ -84,13 +88,18 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     @Transactional(readOnly = true)
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Optional<User> optionalUser = userRepository.findByUserName(username);
+
         if (optionalUser.isEmpty()) {
             System.out.println(username);
             throw new UsernameNotFoundException("Пользователь с таким именем не найден");
         }
-         User userIsFind = optionalUser.get();
-         return new org.springframework.security.core.userdetails.User(
-                userIsFind.getUsername(), userIsFind.getPassword(), mapRolesToAvthorities(userIsFind.getRoles()));
+        User userIsFind = optionalUser.get();
+        Hibernate.initialize(userIsFind.getRoles());
+        //System.out.println(userIsFind.toString());
+        return userIsFind;
+
+        //return new org.springframework.security.core.userdetails.User(
+        //        userIsFind.getUsername(), userIsFind.getPassword(), userIsFind.getRoles());
     }
 
 }

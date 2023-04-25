@@ -1,6 +1,5 @@
 package ru.kata.spring.boot_security.demo.controller;
 
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
@@ -18,7 +17,7 @@ import ru.kata.spring.boot_security.demo.model.User;
 import ru.kata.spring.boot_security.demo.service.RoleService;
 import ru.kata.spring.boot_security.demo.service.UserService;
 import ru.kata.spring.boot_security.demo.validator.UserValidator;
-import java.util.List;
+
 
 
 @Controller
@@ -28,13 +27,11 @@ public class AdminController {
 
     private final UserService userService;
     private final RoleService roleService;
-    private final PasswordEncoder passwordEncoder;
-    private final UserValidator userValidator;
+     private final UserValidator userValidator;
 
-    public AdminController(UserService userService, RoleService roleService, PasswordEncoder passwordEncoder, UserValidator userValidator) {
+    public AdminController(UserService userService, RoleService roleService, UserValidator userValidator) {
         this.userService = userService;
         this.roleService = roleService;
-        this.passwordEncoder = passwordEncoder;
         this.userValidator = userValidator;
     }
 
@@ -47,8 +44,7 @@ public class AdminController {
     public String addNewUser(ModelMap modelUser) {
         User addUser = new User();
         modelUser.addAttribute("userList", addUser);
-        List<Role> addRoles = (List<Role>) roleService.getAllRole();
-        modelUser.addAttribute("roleList", addRoles);
+        modelUser.addAttribute("roleList", roleService.getAllRole());
         return "addUser";
     }
     @PostMapping(value = "/saveUser")
@@ -58,13 +54,12 @@ public class AdminController {
         userValidator.validate(userSave, bindingResult);
 
         if (bindingResult.hasErrors()) {
-            List<Role> addRoles = (List<Role>) roleService.getAllRole();
-            modelUser.addAttribute("roleList", addRoles);
+            modelUser.addAttribute("roleList", roleService.getAllRole());
             modelUser.addAttribute("userList", userSave);
             return "addUser";
         }
           userSave.addRolesUsers(roleSave);
-          userService.saveUser(userSave, passwordEncoder);
+          userService.saveUser(userSave);
           return "redirect:/admin/";
     }
 
@@ -76,13 +71,12 @@ public class AdminController {
     @GetMapping(value = "/{id}/editUser")
     public String editUser(Model modelUser, @PathVariable("id") Long idEdit) {
         modelUser.addAttribute("userList", userService.findUser(idEdit));
-        List<Role> addRoles = (List<Role>) roleService.getAllRole();
-        modelUser.addAttribute("roleList", addRoles);
+        modelUser.addAttribute("roleList", roleService.getAllRole());
         return "editUser";
     }
     @PatchMapping(value = "/{id}/updateUser")
     public String updateUser(@ModelAttribute("userList") User userUpdate) {
-        userService.updateUser(userUpdate,passwordEncoder);
+        userService.updateUser(userUpdate);
         return "redirect:/admin/";
     }
 
