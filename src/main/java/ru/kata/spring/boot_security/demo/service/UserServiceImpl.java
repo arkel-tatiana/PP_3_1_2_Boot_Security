@@ -79,11 +79,6 @@ public class UserServiceImpl implements UserService, UserDetailsService {
        userRepository.save(userUpdate);
     }
 
-
-
-    private Collection<? extends GrantedAuthority> mapRolesToAvthorities( Collection<Role> roles) {
-        return roles.stream().map(r -> new SimpleGrantedAuthority(r.getAuthority())).collect(Collectors.toList());
-    }
     @Override
     @Transactional(readOnly = true)
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -93,13 +88,9 @@ public class UserServiceImpl implements UserService, UserDetailsService {
             System.out.println(username);
             throw new UsernameNotFoundException("Пользователь с таким именем не найден");
         }
-        User userIsFind = optionalUser.get();
-        Hibernate.initialize(userIsFind.getRoles());
-        //System.out.println(userIsFind.toString());
-        return userIsFind;
-
-        //return new org.springframework.security.core.userdetails.User(
-        //        userIsFind.getUsername(), userIsFind.getPassword(), userIsFind.getRoles());
+//        User userIsFind = optionalUser.get();
+//        Hibernate.initialize(userIsFind.getRoles());
+         return optionalUser.get();
     }
 
 }

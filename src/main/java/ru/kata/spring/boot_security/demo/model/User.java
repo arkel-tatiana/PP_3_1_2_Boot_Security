@@ -54,7 +54,7 @@ public class User implements UserDetails {
     inverseJoinColumns = @JoinColumn(name = "role_id"))
     @NotEmpty(message = "Пользователю не присвоена роль")
     @Column(name = "role")
-    private List<Role> roles;
+    private Set<Role> roles;
 
     public User() {
     }
@@ -133,17 +133,17 @@ public class User implements UserDetails {
         this.password = password;
     }
 
-    public List<Role> getRoles() {
+    public Set<Role> getRoles() {
         return roles;
     }
 
-    public void setRoles(List<Role> roles) {
+    public void setRoles(Set<Role> roles) {
         this.roles = roles;
     }
 
     public void addRolesUsers(Role role) {
         if (roles == null) {
-            roles = new ArrayList<Role>();
+            roles = new HashSet<Role>();
         }
         if (role.getName() != null) {
             roles.add(role);
